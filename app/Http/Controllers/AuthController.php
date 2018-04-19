@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class AuthController extends Controller
@@ -63,4 +64,24 @@ class AuthController extends Controller
         }
         return response()->json(['success'=> false, 'error'=> "Verification code is invalid."]);
     }
+    public function authenticate(Request $request)
+    {
+        // grab credentials from the request
+        $credentials = $request->only('email', 'password');
+
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            return response()->json(['error' => 'Could not create token'], 500);
+        }
+
+        // all good so return the token
+        return response()->json(compact('token'));
+    }
+
+
 }
