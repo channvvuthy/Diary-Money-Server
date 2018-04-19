@@ -13,9 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('user/profile', [
+        'uses' => 'UserController@getProfile',
+        'as' => 'userProfile'
+    ]);
 });
+
 
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');

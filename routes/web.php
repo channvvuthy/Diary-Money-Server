@@ -14,7 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('send','SendSMSController@getSend') ;
+Route::get('send', 'SendSMSController@getSend');
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@authenticate');
